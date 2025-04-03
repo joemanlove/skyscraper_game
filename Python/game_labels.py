@@ -1,6 +1,6 @@
 
 class Label:
-    def __init__(self, value, side, board_size):
+    def __init__(self, value, side, board_size, row=None, column=None):
         """Label for the side of the game. Use a value of 0 for a placeholder."""
         if value in range(10):
             self.value = value
@@ -11,6 +11,10 @@ class Label:
         else:
             raise ValueError("Side must be 'left', 'right', 'top', or 'bottom'.")
         self.board_size = board_size
+        if row == None and column == None:
+            raise ValueError("You must set either row or column when creating a Label.")
+        self.row = row
+        self.column = column
 
     def display(self, console_row_number):
         """Returns the ascii for a label given which row. Note: labels should be limited to sizes 0-9."""
