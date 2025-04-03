@@ -6,7 +6,7 @@ class Piece:
         self.board_size = board_size
 
     def display(self, console_row_number):
-        """returns the ascii for a the piece given which row ."""
+        """returns the ascii for a piece given which row."""
         if console_row_number in range(self.size):
             return f"{'X'*self.size}{' '*(self.board_size-self.size)}"
         else:
