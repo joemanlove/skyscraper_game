@@ -29,9 +29,9 @@ class GameBoard:
         # all Pieces are included by reference, so the display is the same as the data in the rows and columns
         self.rows_with_labels = [[Label(0, "top", self.size, column=j) for j in range(self.size+2)]]
         for i in range(self.size):
-            row_with_labels = [Label(0, "left", self.size, row=i)]
+            row_with_labels = [Label(0, "left", self.size, row=i+1)]
             row_with_labels += self.rows[i]
-            row_with_labels += [Label(0, "right", self.size, row=i)]
+            row_with_labels += [Label(0, "right", self.size, row=i+1)]
             self.rows_with_labels.append(row_with_labels)
         self.rows_with_labels.append([Label(0, "bottom", self.size, column=j) for j in range(self.size+2)])
 
@@ -140,12 +140,56 @@ class GameBoard:
         """
         valid = [i+1 for i in range(self.size)]
         
+        def how_many_towers_can_be_seen(towers):
+            highest_so_far = 0
+            visible = 0
+            for piece in towers:
+                if piece.size > highest_so_far:
+                    visible += 1
+                    highest_so_far = piece.size
+            return visible
+
+        # check label validity
+        for label in self.labels:
+            # check the labels on the left side
+            if label.side == "left" and label.value != 0:
+                row = self.rows[label.row-1]
+                visible = how_many_towers_can_be_seen(row)
+                if label.value != visible:
+                    print(f"From {label.side} can see {visible}, not {label.value}")
+                    return False
+            # check labels on the right side
+            elif label.side == "right" and label.value != 0:
+                row = self.rows[label.row-1]
+                row = row[::-1]
+                visible = how_many_towers_can_be_seen(row)
+                if label.value != visible:
+                    print(f"From {label.side} can see {visible}, not {label.value}")
+                    return False
+            # check labels on the top side
+            elif label.side == "top" and label.value != 0:
+                column = self.columns[label.column-1]
+                # row = row[::-1]
+                visible = how_many_towers_can_be_seen(column)
+                if label.value != visible:
+                    print(f"From {label.side} can see {visible}, not {label.value}")
+                    return False
+            # check labels on the bottom side
+            elif label.side == "bottom" and label.value != 0:
+                column = self.columns[label.column-1]
+                column = column[::-1]
+                visible = how_many_towers_can_be_seen(column)
+                if label.value != visible:
+                    print(f"From {label.side} can see {visible}, not {label.value}")
+                    return False
+
         # check that each row is valid
         for row in self.rows:
             values =[]
             for piece in row:
                 values.append(piece.size)
             if not list_equality_check(values, valid):
+                print("Rows are not correct.")
                 return False
         
         # check that each column is valid
@@ -154,7 +198,10 @@ class GameBoard:
             for piece in column:
                 values.append(piece.size)
             if not list_equality_check(values, valid):
+                print("Columns are not correct.")
                 return False
+            
+        
 
         return True
     

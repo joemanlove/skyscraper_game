@@ -1,30 +1,21 @@
 from game_board import GameBoard
-from utilities import clear
+from levels import level_1
 
-
+current_level = level_1
+level_count = 0
 
 if __name__ == "__main__":
-
-    invalid_test_board = GameBoard(size = 4)
-    invalid_test_board.place_piece(0, 0, 3)
-    invalid_test_board.place_piece(0, 1, 2)
-    invalid_test_board.place_piece(0, 2, 1)
-    invalid_test_board.place_piece(1, 0, 3)
-    invalid_test_board.place_piece(1, 1, 2)
-    invalid_test_board.place_piece(1, 2, 1)
-    invalid_test_board.place_piece(2, 0, 3)
-    invalid_test_board.place_piece(2, 1, 2)
-    invalid_test_board.place_piece(2, 2, 1)
-
-    # invalid_test_board.display()
-
-    # print(invalid_test_board.valid_board())
-
-
+    
     while True:
-        clear()
-        invalid_test_board.display()
-        print(invalid_test_board.valid_board())
-        invalid_test_board.collect_user_move()
+        current_level.play()
+        answer = input("Proceed to next level?\n")
+        if answer.lower() in ["y", "yes", "yeah", "yup"] and current_level.next_level:
+            current_level = current_level.next_level
+            level_count += 1
+            answer = ""
+        else:
+            print(f"Thanks for playing! You successfully solved {level_count} levels.")
+            break
+
 
 
